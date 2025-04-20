@@ -6,7 +6,7 @@ const baseUserSchema = new Schema({
   email: { type: String, required: true, unique: false },
   password: { type: String, required: true },
   phone: { type: String, required: true },
-  fcmToken: { type: String, required: true },
+  fcmToken: { type: String, default: null },
   socketId: { type: String, default: null },
   profilePicture: { type: String, default: null },
   role: { type: String, required: true, enum: ['passenger', 'rider', 'admin'], default: 'passenger' },

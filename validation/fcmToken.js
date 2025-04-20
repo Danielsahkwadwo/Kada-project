@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const fcmTokenSchema = Joi.string()
-  .required()
+  // .required() // will be required in the future
   .min(100) // Adjust the minimum length according to your needs
   .max(1000) // Adjust the maximum length according to your needs
   .pattern(/^[a-zA-Z0-9:._-]+$/)
