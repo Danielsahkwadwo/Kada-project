@@ -40,10 +40,6 @@ app.use(
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: "50mb" }));
-app.use((err, req, res, next) => {
-  console.error("Error Handler:", err.message);
-  res.status(500).json({ message: err.message });
-});
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -67,6 +63,31 @@ server.listen(PORT, () => {
 
 app.get("/", (req, res, next) => {
   res.send("Welcome to the KADA APP Backend. Go to <a href='/docs/'>/docs</a> for api documentation");
+});
+
+app.use((req, res, next) => {
+  res.status(404).json({
+    status: 'error',
+    message: 'Not Found - The requested resource does not exist'
+  });
+});
+
+app.use((err, req, res, next) => {
+  console.error("Error Handler:", err.message);
+  
+  if (res.headersSent) {
+    return next(err);
+  }
+  
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+  
+  res.status(statusCode).json({
+    status: 'error',
+    message: message,
+    errors: err.errors || null,
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack
+  });
 });
 
 module.exports = {
